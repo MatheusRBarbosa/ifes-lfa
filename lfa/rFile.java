@@ -21,12 +21,16 @@ public class rFile {
 
     private String fileDir;
 
-    private String keys[] = {"symbols-in", "symbols-out", "states", "start", "finals", "trans"};
+    private String[] keys;
     private boolean trans = false;
+    private boolean outFn = false;
+    private int maxCont = 0;
+    private String type;
     private List<ArrayList<String>> automato = new ArrayList<>();
 
-    public rFile(String fileDir) {
+    public rFile(String fileDir, String[] keys) {
         this.fileDir = fileDir;
+        this.keys = keys;
     }
 
     public List<ArrayList<String>> readFile() {
@@ -37,6 +41,7 @@ public class rFile {
             String line = readF.readLine();
 
             while (line != null) {
+                line = line.replace("()", "[]");
                 //System.out.println("-->" + line);
                 insertAutomato(line);
                 line = readF.readLine();
@@ -52,7 +57,6 @@ public class rFile {
 
     private void insertAutomato(String line) {
         int cont = 0;
-        
         StringTokenizer st = new StringTokenizer(line, "() ", true);
         ArrayList<String> auxList = new ArrayList<>();
         while (st.hasMoreTokens()) {
@@ -60,23 +64,36 @@ public class rFile {
             if (!token.equals(" ")) {
                 if (!token.equals("(")) {
                     if (!token.equals(")")) {
-                        if(token.equals("trans")){
+                        if (token.equals("trans")) {
                             this.trans = true;
+                        }
+                        else if (token.equals("out-fn")) {
+                            this.trans = false;
+                            this.outFn = true;
+                            this.maxCont = 2;
+                        }
+                        else if (token.equals("moore")) {
+                            this.type = "moore";
+                            this.maxCont = 3;
+                        }
+                        else if (token.equals("mealy")) {
+                            this.type = "mealy";
+                            this.maxCont = 4;
                         }
                         if (!keyWord(token)) {
                             auxList.add(token);
                             cont++;
-                            if(trans && cont == 4){
+                            if ((trans && cont == this.maxCont) || (outFn && cont == this.maxCont)) {
                                 automato.add(auxList);
-                                auxList = new ArrayList<>(); 
+                                auxList = new ArrayList<>();
                                 cont = 0;
-                            }                            
+                            }
                         }
                     }
                 }
             }
         }
-        if(!trans){
+        if (!trans && !outFn) {
             automato.add(auxList);
         }
     }
