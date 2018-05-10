@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -71,6 +72,8 @@ public class rFile {
                             this.trans = false;
                             this.outFn = true;
                             this.maxCont = 2;
+                            auxList.add(token);
+                            this.automato.add(auxList);
                         }
                         else if (token.equals("moore")) {
                             this.type = "moore";

@@ -15,31 +15,56 @@ import java.util.List;
 public class Automato {
     
     private List<ArrayList<String>> automato;
+    private List<ArrayList<String>> automatoOriginal;
     
     
     public Automato (List<ArrayList<String>> array){
         this.automato = array;
+        this.automatoOriginal = array;
     }
     
-    public List<ArrayList<String>> getAutomato(){
-        return this.automato;
+    public void imprime(){
+        for(int i=0;i<this.automato.size();i++){
+            System.out.println(this.automato.get(i));
+        }
     }
     
-    public List<ArrayList<String>> convert ( List<ArrayList<String>> automatoList){
-        if(automatoList.get(0).equals("moore")){
-            return toMealy(automatoList);
+    public void convert (){
+        if(this.automato.get(0).get(0).equals("moore")){
+            toMealy();
         }
-        else if(automatoList.get(0).equals("mealy")){
-            return toMoore(automatoList);
+        else if(this.automato.get(0).equals("mealy")){
+            toMoore();
         }
-        return null;
     }
 
-    private List<ArrayList<String>> toMealy(List<ArrayList<String>> automatoList) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void toMealy() {
+        //0 - tipo || 1 - entrada || 2 - saidas || 3 - estados
+        //4 - start || 5 - final || 6..n - Trans
+        boolean outFind = false;
+        int outPos = 0;
+        for(int i=0;i<this.automato.size();i++){
+            if(outFind){
+                ArrayList<String> add = this.automato.get(i);
+                for(int j=6; j<this.automato.size() && !this.automato.get(j).get(0).equals("out-fn");j++){
+                    if(this.automato.get(j).get(1).equals(add.get(0))){
+                        this.automato.get(j).add(add.get(1));
+                    }
+                }
+            }
+            if(this.automato.get(i).get(0).equals("out-fn")){
+                outFind = true;
+                outPos = i;
+            }
+        }
+        this.automato.remove(0);
+        this.automato.add(0, new ArrayList<String>(){{add("mealy");}});
+        for(int i=outPos;i<this.automato.size() && outFind;){
+            this.automato.remove(i);
+        }
     }
 
-    private List<ArrayList<String>> toMoore(List<ArrayList<String>> automatoList) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void toMoore() {
+        //Todo
     }
 }

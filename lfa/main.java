@@ -21,12 +21,10 @@ public class main {
         String[] keys = {"symbols-in", "symbols-out", "states", "start", "finals", "trans", "out-fn"};
         rFile file = new rFile("C:/Users/mathe/Documents/NetBeansProjects/TrabLFA/src/arquivosTeste/moore.lisp", keys);
         Automato automato = new Automato(file.readFile());
-        List<ArrayList<String>> automatoList = automato.getAutomato();
-        
-       //System.out.println(automatoList.get(0));
-        for(int i=0;i<automatoList.size();i++){
-            System.out.println(automatoList.get(i));
-        }
+        //automato.imprime();
+        automato.convert();
+        System.out.println("==CONVERSAO==");
+        automato.imprime();
     }
     
 }
