@@ -19,7 +19,7 @@ public class main {
      */
     public static void main(String[] args) {
         String[] keys = {"symbols-in", "symbols-out", "states", "start", "finals", "trans", "out-fn"};
-        rFile file = new rFile("C:/Users/mathe/Documents/NetBeansProjects/TrabLFA/src/arquivosTeste/moore.lisp", keys);
+        rFile file = new rFile("C:/Users/mathe/Documents/NetBeansProjects/TrabLFA/src/arquivosTeste/mealy.lisp", keys);
         Automato automato = new Automato(file.readFile());
         //automato.imprime();
         automato.convert();
