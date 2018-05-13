@@ -6,6 +6,7 @@
 package lfa;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,13 +16,17 @@ import java.util.List;
 public class Automato {
 
     private List<ArrayList<String>> automato;
-    private List<ArrayList<String>> automatoOriginal;
+    private int endMealy;
+    private int newTrans = 0;
 
     public Automato(List<ArrayList<String>> array) {
         this.automato = array;
-        this.automatoOriginal = array;
     }
 
+    public List<ArrayList<String>> getAutomato(){
+        return this.automato;
+    }
+    
     public void imprime() {
         for (int i = 0; i < this.automato.size(); i++) {
             System.out.println(this.automato.get(i));
@@ -37,8 +42,6 @@ public class Automato {
     }
 
     private void toMealy() {
-        //0 - tipo || 1 - entrada || 2 - saidas || 3 - estados
-        //4 - start || 5 - final || 6..n - Trans
         boolean outFind = false;
         int outPos = 0;
         for (int i = 0; i < this.automato.size(); i++) {
@@ -63,6 +66,7 @@ public class Automato {
     }
 
     private void toMoore() {
+        this.endMealy = this.automato.size();
         this.automato.add((this.automato.size()), new ArrayList<String>(){{add("out-fn");}});
         ArrayList<Integer> pos;
         for (int i = 0; i < this.automato.get(3).size(); i++) {
@@ -82,6 +86,8 @@ public class Automato {
                 migrateEstate(pos);
             }
         }
+        this.automato.add(0, new ArrayList<String>(){{add("moore");}});
+        this.automato.remove(1);
     }
 
     private void migrateEstateZero(int pos){
@@ -103,25 +109,45 @@ public class Automato {
     
     private void migrateEstate(ArrayList<Integer> pos){
         String newState = this.automato.get(pos.get(0)).get(1);
-        int outSize = 0;
+        ArrayList<String> line;
+        HashMap<String, String> outfn = new HashMap<>();
         ArrayList<String> newOut;
+        
+        outfn.put(this.automato.get(pos.get(0)).get(3), newState);
         for(int k=0;k<pos.size();k++){
-            if(this.automato.get(pos.get(k)).size() == 4){
-                /*for(int i=0;i<pos.size();i++){
-                    if(this.automato.get(pos.get(i)).get(3).equals(outfn)){
-                        this.automato.get(pos.get(i)).remove(3);
-                    }
+            line = this.automato.get(pos.get(k));
+            if(line.size() > 3){
+                if(!outfn.containsKey(line.get(3))){
+                    newState += "'";
+                    outfn.put(line.get(3), newState);
+                }
+                /*if(line.get(0).equals(line.get(1))){
+                    this.newTrans = 0;
+                    newOut = new ArrayList<>();
+                    newOut.add(outfn.get(line.get(3)));
+                    newOut.add(outfn.get(line.get(3)));
+                    newOut.add(this.automato.get(1).get(this.newTrans));
+                    this.automato.add(this.endMealy, newOut);
+                    this.endMealy++;
+                    this.newTrans++;
                 }*/
-            }
-            if(outSize < this.automato.get(2).size()){
-                newOut = new ArrayList<>();
-                String outfn = this.automato.get(pos.get(k)).get(3);
-                newOut.add(newState);
-                newOut.add(outfn);
-                this.automato.add(newOut);
-                newState += "'";
-                outSize++;
+                line.add(1, outfn.get(line.get(3)));
+                line.remove(2);
+                line.remove(3);
+                //System.out.println(line);
             }
         }
+        for(String key: outfn.keySet()){
+            newOut = new ArrayList<>();
+            newOut.add(outfn.get(key));
+            newOut.add(key);
+            this.automato.add(newOut);
+        }
+        this.automato.remove(5);
+        newOut = new ArrayList<>();
+        for(String key: outfn.keySet()){
+            newOut.add(outfn.get(key));
+        }
+        this.automato.add(5, newOut);
     }
 }

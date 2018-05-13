@@ -6,13 +6,17 @@
 package lfa;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,6 +25,7 @@ import java.util.StringTokenizer;
 public class rFile {
 
     private String fileDir;
+    private String fileOut;
 
     private String[] keys;
     private boolean trans = false;
@@ -29,8 +34,9 @@ public class rFile {
     private String type;
     private List<ArrayList<String>> automato = new ArrayList<>();
 
-    public rFile(String fileDir, String[] keys) {
+    public rFile(String fileDir, String fileOut,String[] keys) {
         this.fileDir = fileDir;
+        this.fileOut = fileOut;
         this.keys = keys;
     }
 
@@ -43,7 +49,6 @@ public class rFile {
 
             while (line != null) {
                 line = line.replace("()", "[]");
-                //System.out.println("-->" + line);
                 insertAutomato(line);
                 line = readF.readLine();
             }
@@ -108,5 +113,53 @@ public class rFile {
             }
         }
         return false;
+    }
+    
+    public void writeFile(List<ArrayList<String>> automato) throws IOException{
+        FileWriter file = new FileWriter(this.fileOut);
+        PrintWriter writer = new PrintWriter(file);
+        int iKey = 0;
+        boolean trans = false;
+        boolean transValue = false;
+        for(int i=0;i<automato.size();i++){
+            trans = false;
+            String line = "(";
+            if(i == 0){
+                line += automato.get(i).get(0);
+            }
+            else if (i > 0){
+                if(iKey < this.keys.length-1){
+                    line += this.keys[iKey];
+                    if(this.keys[iKey].equals("trans")){
+                        trans = true;
+                        transValue = true;
+                    }
+                    iKey++;
+                }
+                if(!trans){
+                    for(int j=0;j<automato.get(i).size();j++){
+                        if(!transValue){
+                            line+= " ";
+                        }
+                        line+= automato.get(i).get(j);
+                        if(transValue && automato.get(i).size()-1 > j){
+                            line+= " ";
+                        }
+                    }
+                    if(!automato.get(i).get(0).equals("out-fn")){
+                        line+= ")";
+                    }
+                }
+            }
+            if(i == automato.size()-1 || automato.get(i+1).get(0).equals("out-fn")){
+                line+= ")";
+            }
+            if(i+1 == automato.size()){
+                line+= ")";
+            }
+            line+="\n";
+            writer.printf(line);
+        }
+        file.close();
     }
 }

@@ -5,8 +5,7 @@
  */
 package lfa;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
 /**
  *
@@ -17,14 +16,23 @@ public class main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         String[] keys = {"symbols-in", "symbols-out", "states", "start", "finals", "trans", "out-fn"};
-        rFile file = new rFile("C:/Users/mathe/Documents/NetBeansProjects/TrabLFA/src/arquivosTeste/mealy.lisp", keys);
+       
+        //String fileIn = "C:/Users/mathe/Documents/NetBeansProjects/TrabLFA/src/arquivosTeste/moore1.lisp";
+        //String fileOut = "C:/Users/mathe/Documents/NetBeansProjects/TrabLFA/src/arquivosTeste/teste.lisp";
+        String fileIn = args[0];
+        String fileOut = args[1];
+        
+        rFile file = new rFile(fileIn, fileOut, keys);
+        
         Automato automato = new Automato(file.readFile());
         //automato.imprime();
-        automato.convert();
         System.out.println("==CONVERSAO==");
-        automato.imprime();
+        automato.convert();
+        //automato.imprime();
+        
+        file.writeFile(automato.getAutomato());
     }
     
 }
