@@ -28,7 +28,7 @@ public class main {
         
         Automato automato = new Automato(file.readFile());
         //automato.imprime();
-        System.out.println("==CONVERSAO==");
+        System.out.println("== Arquivo gerado ==");
         automato.convert();
         //automato.imprime();
         
