@@ -14,8 +14,10 @@ O código está dividido em três classes, **rFile**, **Automato**, **main**.
  
  Para compilar é necessário que java esteja instalando na máquina e devidamente configurado.
  
- Dentro da pasta do código, compile-o pelo comando:
+ Dentro da pasta do código, compile-o pelo comando:<br>
  `javac *.java`
  
- Execute-o:
+ Execute-o:<br>
  `java main <arquivo_de_entrada> <arquivo_de_saida>`
+ 
+ *Observação: Se o java nao conseguir achar a classe para executar, tente subir uma pasta.*
