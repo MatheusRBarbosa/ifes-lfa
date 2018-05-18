@@ -13,26 +13,37 @@ import java.io.IOException;
  */
 public class main {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) throws IOException {
         String[] keys = {"symbols-in", "symbols-out", "states", "start", "finals", "trans", "out-fn"};
-       
-        //String fileIn = "C:/Users/mathe/Documents/NetBeansProjects/TrabLFA/src/arquivosTeste/moore1.lisp";
-        //String fileOut = "C:/Users/mathe/Documents/NetBeansProjects/TrabLFA/src/arquivosTeste/teste.lisp";
-        String fileIn = args[0];
-        String fileOut = args[1];
+        String fileIn = "<<error>>";
+        String fileOut = "<<error>>";
+
+        if (args[0].equals("-i")) {
+            fileIn = args[1];
+        } else if (args[0].equals("-o")) {
+            fileOut = args[1];
+        }
+
+        if (args[2].equals("-o")) {
+            fileOut = args[3];
+        } else if (args[2].equals("-i")) {
+            fileIn = args[3];
+        }
+
+        if(fileIn.equals("<<error>>") || fileOut.equals("<<error>>")){
+            System.out.println("Erro ao encontrar e/ou abrir arquivo");
+        }
+        else{
+            
+            rFile file = new rFile(fileIn, fileOut, keys);
         
-        rFile file = new rFile(fileIn, fileOut, keys);
+            Automato automato = new Automato(file.readFile());
+            System.out.println("== Arquivo com sucesso ! ==");
+            automato.convert();
+
+            file.writeFile(automato.getAutomato());
+        }
         
-        Automato automato = new Automato(file.readFile());
-        //automato.imprime();
-        System.out.println("== Arquivo gerado ==");
-        automato.convert();
-        //automato.imprime();
-        
-        file.writeFile(automato.getAutomato());
     }
-    
+
 }
