@@ -38,7 +38,7 @@ public class main {
             rFile file = new rFile(fileIn, fileOut, keys);
         
             Automato automato = new Automato(file.readFile());
-            System.out.println("== Arquivo com sucesso ! ==");
+            System.out.println("== Arquivo convertido com sucesso ! ==");
             automato.convert();
 
             file.writeFile(automato.getAutomato());
