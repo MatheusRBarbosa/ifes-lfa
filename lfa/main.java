@@ -30,7 +30,7 @@ public class main {
             fileIn = args[3];
         }
 
-        if(fileIn.equals("<<error>>") || fileOut.equals("<<error>>")){
+        if(fileIn.equals("<<error>>") || fileOut.equals("<<error>>") || args[0].isEmpty()){
             System.out.println("Erro ao encontrar e/ou abrir arquivo");
         }
         else{
